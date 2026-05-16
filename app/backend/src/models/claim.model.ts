@@ -27,7 +27,7 @@ interface ILineItem {
 
 export interface IClaim extends Document {
     policyId: mongoose.Types.ObjectId;
-
+    incidentDate: Date;
     totalClaimedAmount: number;
     totalApprovedAmount: number;
 
@@ -80,7 +80,10 @@ const ClaimSchema = new Schema<IClaim>(
             ref: "Policy",
             required: true
         },
-
+        incidentDate: {
+            type: Date,
+            required: true
+        },
         totalClaimedAmount: {
             type: Number,
             required: true

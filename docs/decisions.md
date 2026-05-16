@@ -11,3 +11,17 @@ Chosen for lightweight frontend setup and quick UI iteration.
 
 ### Modular Monolith
 Prioritized simplicity and readability over distributed architecture.
+
+## Embedded Claim Line Items
+
+Embedded line items inside the Claim document instead of using a separate collection.
+
+Reasoning:
+- line items are tightly coupled to claim lifecycle
+- adjudication occurs at claim level
+- line items are almost always retrieved together
+- MongoDB supports nested document modeling naturally
+- reduced query complexity for assignment scope
+
+Tradeoff:
+- reduced normalization in favor of simpler adjudication workflow and faster implementation

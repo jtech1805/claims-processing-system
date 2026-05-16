@@ -20,3 +20,5 @@
 # Assumptions
 - Policies are preconfigured
 - Claims become immutable after adjudication
+- MongoDB is used for flexible policy/rule modeling
+- System is designed as a modular monolith
