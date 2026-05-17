@@ -1,0 +1,334 @@
+{
+    "info": {
+        "name": "Insurance Claims System",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:5000/api"
+        },
+        {
+            "key": "policyId",
+            "value": "685000000000000000000001"
+        },
+        {
+            "key": "claimId",
+            "value": "685000000000000000000010"
+        }
+    ],
+    "item": [
+        {
+            "name": "Create Claim - Approved",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/claims",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"policyId\": \"{{policyId}}\",\n  \"incidentDate\": \"2026-06-10\",\n  \"lineItems\": [\n    {\n      \"serviceType\": \"MRI\",\n      \"claimedAmount\": 5000\n    }\n  ]\n}"
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status code is 201', function () {",
+                            "    pm.response.to.have.status(201);",
+                            "});",
+                            "",
+                            "pm.test('Claim created successfully', function () {",
+                            "    const jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.success).to.eql(true);",
+                            "});"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Create Claim - Excluded Service",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/claims",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"policyId\": \"{{policyId}}\",\n  \"incidentDate\": \"2026-06-10\",\n  \"lineItems\": [\n    {\n      \"serviceType\": \"COSMETIC\",\n      \"claimedAmount\": 7000\n    }\n  ]\n}"
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Claim rejected', function () {",
+                            "    const jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.data.status).to.eql('REJECTED');",
+                            "});"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Create Claim - Uncovered Service",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/claims",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"policyId\": \"{{policyId}}\",\n  \"incidentDate\": \"2026-06-10\",\n  \"lineItems\": [\n    {\n      \"serviceType\": \"DENTAL\",\n      \"claimedAmount\": 4000\n    }\n  ]\n}"
+                }
+            }
+        },
+        {
+            "name": "Create Claim - Deductible Fully Consumes",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/claims",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"policyId\": \"{{policyId}}\",\n  \"incidentDate\": \"2026-06-10\",\n  \"lineItems\": [\n    {\n      \"serviceType\": \"MRI\",\n      \"claimedAmount\": 1000\n    }\n  ]\n}"
+                }
+            }
+        },
+        {
+            "name": "Create Claim - Mixed Line Items",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/claims",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"policyId\": \"{{policyId}}\",\n  \"incidentDate\": \"2026-06-10\",\n  \"lineItems\": [\n    {\n      \"serviceType\": \"MRI\",\n      \"claimedAmount\": 6000\n    },\n    {\n      \"serviceType\": \"COSMETIC\",\n      \"claimedAmount\": 3000\n    }\n  ]\n}"
+                }
+            }
+        },
+        {
+            "name": "Get Claims Ledger",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/claims/ledger",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims",
+                        "ledger"
+                    ]
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Ledger fetched successfully', function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Get Claim Details",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/claims/{{claimId}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims",
+                        "{{claimId}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Metrics Summary",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/claims/metrics/summary",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims",
+                        "metrics",
+                        "summary"
+                    ]
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Metrics summary fetched', function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Search Policy Limits",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/policies/limits?search=POL",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "policies",
+                        "limits"
+                    ],
+                    "query": [
+                        {
+                            "key": "search",
+                            "value": "POL"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Validation Test - Empty Line Items",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/claims",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"policyId\": \"{{policyId}}\",\n  \"incidentDate\": \"2026-06-10\",\n  \"lineItems\": []\n}"
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Validation failed correctly', function () {",
+                            "    pm.response.to.have.status(400);",
+                            "});"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Validation Test - Invalid Policy ID",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/claims",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "claims"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"policyId\": \"INVALID-ID\",\n  \"incidentDate\": \"2026-06-10\",\n  \"lineItems\": [\n    {\n      \"serviceType\": \"MRI\",\n      \"claimedAmount\": 5000\n    }\n  ]\n}"
+                }
+            }
+        }
+    ]
+}
