@@ -67,27 +67,64 @@ export const createClaim = async (
 };
 export const getProcessedClaimsLedger =
     async () => {
-        const claims = await Claim.find({
-            status: {
-                $in: [
-                    "APPROVED",
-                    "PARTIAL_APPROVED",
-                    "REJECTED"
-                ]
-            }
-        })
-            .select([
-                "_id",
-                "policyId",
-                "incidentDate",
-                "status",
-                "totalClaimedAmount",
-                "totalApprovedAmount",
-                "updatedAt"
-            ])
-            .sort({
-                updatedAt: -1
-            });
+        const claims =
+            await Claim.aggregate([
+                {
+                    $match: {
+                        status: {
+                            $in: [
+                                "APPROVED",
+                                "PARTIAL_APPROVED",
+                                "REJECTED"
+                            ]
+                        }
+                    }
+                },
+
+                {
+                    $project: {
+                        _id: {
+                            $toString: "$_id"
+                        },
+
+                        policyId: {
+                            $toString: "$policyId"
+                        },
+
+                        incidentDate: {
+                            $dateToString: {
+                                date: "$incidentDate",
+                                format:
+                                    "%Y-%m-%dT%H:%M:%S.%LZ"
+                            }
+                        },
+
+                        submittedAt: {
+                            $dateToString: {
+                                date: "$createdAt",
+                                format:
+                                    "%Y-%m-%dT%H:%M:%S.%LZ"
+                            }
+                        },
+
+                        totalBilled:
+                            "$totalClaimedAmount",
+
+                        totalApproved:
+                            "$totalApprovedAmount",
+
+                        status: 1,
+
+                        lineItems: 1
+                    }
+                },
+
+                {
+                    $sort: {
+                        submittedAt: -1
+                    }
+                }
+            ]);
 
         return claims;
     };
@@ -114,4 +151,43 @@ export const getClaimById =
         }
 
         return claim;
+    };
+
+export const getClaimsMetricsSummary =
+    async () => {
+        const claims = await Claim.find({
+            status: {
+                $in: [
+                    "APPROVED",
+                    "PARTIAL_APPROVED",
+                    "REJECTED"
+                ]
+            }
+        });
+
+        const totalClaims =
+            claims.length;
+
+        const totalPaidOut =
+            claims.reduce(
+                (sum, claim) =>
+                    sum +
+                    claim.totalApprovedAmount,
+                0
+            );
+
+        const totalSavedByDeductibles =
+            claims.reduce(
+                (sum, claim) =>
+                    sum +
+                    (claim.totalClaimedAmount -
+                        claim.totalApprovedAmount),
+                0
+            );
+
+        return {
+            totalClaims,
+            totalPaidOut,
+            totalSavedByDeductibles
+        };
     };

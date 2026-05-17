@@ -14,6 +14,6 @@ export const getPolicyLimits =
 
         res.status(200).json({
             success: true,
-            data: limits
+            data: limits[0]
         });
     };

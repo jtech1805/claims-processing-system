@@ -46,3 +46,17 @@ export const getClaim =
             data: claim
         });
     };
+
+export const getClaimsMetrics =
+    async (
+        req: Request,
+        res: Response
+    ) => {
+        const metrics =
+            await claimService.getClaimsMetricsSummary();
+
+        res.status(200).json({
+            success: true,
+            data: metrics
+        });
+    };

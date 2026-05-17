@@ -35,3 +35,11 @@ Standard Approach: Throwing a 400/500 error, which leaves the claim permanently 
 Our Decision: Intercept the invalid state, mark all items as REJECTED with a clear reason, and save the final state to the database.
 
 Business Value: Creates a mathematically complete ledger and a perfect audit trail so Customer Support is never blind when a provider calls about a failed claim.
+
+## UI/UX Strategy: The Internal Enterprise Dashboard
+
+Rather than building a consumer-facing "Patient Portal", I deliberately designed the frontend as an Internal Insurance Operations Dashboard (Claims Adjuster Persona). 
+
+**Reasoning:**
+1. **Data Security & Scope:** The backend APIs intentionally expose system-wide ledger data (`GET /api/claims`) and aggregated financial KPIs (`GET /api/claims/metrics/summary`). Exposing this in a consumer app would be a massive data leak. This data strictly belongs in an internal admin tool.
+2. **The "Manual Entry" Workflow:** In reality, most claims arrive via automated EDI feeds. However, ops teams still require a manual entry UI for paper claims and edge cases. I built the "Submit Claim" form to serve this operational need (which also serves as a perfect UI simulator to test the rules engine).

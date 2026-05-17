@@ -3,42 +3,52 @@ import mongoose from "mongoose";
 import { Policy } from "../models/policy.model";
 
 export const getPolicyLimits =
-    async (policyId: string) => {
-        if (
-            !mongoose.Types.ObjectId.isValid(
-                policyId
-            )
-        ) {
-            throw new Error(
-                "Invalid policy ID"
+    async (search: string) => {
+        const escapedSearch =
+            search.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&"
             );
-        }
 
-        const policy =
-            await Policy.findById(policyId);
+        const policies =
+            await Policy.aggregate([
+                {
+                    $match: {
+                        policyNumber: {
+                            $regex: `^${escapedSearch}`,
+                            $options: "i"
+                        }
+                    }
+                },
 
-        if (!policy) {
-            throw new Error(
-                "Policy not found"
-            );
-        }
+                {
+                    $project: {
+                        _id: {
+                            $toString: "$_id"
+                        },
 
-        const remainingAnnualLimit =
-            policy.annualLimit -
-            policy.usedAnnualLimit;
+                        policyId:
+                            "$policyNumber",
 
-        return {
-            policyId: policy._id,
+                        holderName: 1,
 
-            deductibleRemaining:
-                policy.deductible,
+                        planType: 1,
 
-            annualLimit:
-                policy.annualLimit,
+                        annualLimit: 1,
 
-            usedAnnualLimit:
-                policy.usedAnnualLimit,
+                        usedAnnualLimit: 1,
 
-            remainingAnnualLimit
-        };
+                        deductible: 1,
+
+                        remainingDeductible:
+                            "$deductible"
+                    }
+                },
+
+                {
+                    $limit: 10
+                }
+            ]);
+
+        return policies;
     };

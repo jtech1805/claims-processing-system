@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/* ✨ THE MISSING PIECE: Defining Claude's custom UI colors for Tailwind v4 */
+@theme {
+  --color-surface: #0f172a;
+  /* Main background (Slate 900) */
+  --color-surface-base: #0f172a;
+  /* Secondary background */
+  --color-surface-overlay: #1e293b;
+  /* Modals and inputs (Slate 800) */
+  --color-surface-border: #334155;
+  /* Borders (Slate 700) */
+
+  --color-accent: #14b8a6;
+  /* The main Teal color */
+  --color-accent-glow: rgba(20, 184, 166, 0.05);
+  /* Soft teal background */
+
+  --color-status-rejected: #ef4444;
+  /* Red for errors/rejected */
+  --color-status-rejected-bg: rgba(239, 68, 68, 0.1);
+  --color-status-partial: #f59e0b;
+  /* Yellow/Amber for partial */
+}
+
+/* ─── BASE STYLES ───────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-surface);
+  /* Uses the theme color now! */
+  color: #f1f5f9;
+  /* slate-100 default text color */
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e2d42;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2d4060;
+}
+
+/* ─── CUSTOM COMPONENTS ─────────────────────────────────────────────────── */
+@layer components {
+
+  /* Skeleton shimmer base */
+  .skeleton {
+    background: linear-gradient(90deg,
+        #111827 25%,
+        #1a2640 50%,
+        #111827 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Teal accent glow for focused inputs */
+  .input-glow:focus {
+    box-shadow: 0 0 0 1px var(--color-accent), 0 0 12px rgba(20, 184, 166, 0.2);
+    outline: none;
+  }
+
+
+  /* Table row hover with left accent bar - FIXED */
+  .claim-row {
+    transition: background-color 0.15s ease;
+  }
+
+  /* Apply the positioning to the FIRST cell, not the row */
+  .claim-row td:first-child {
+    position: relative;
+  }
+
+  .claim-row td:first-child::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background-color: var(--color-accent);
+    transition: width 0.15s ease;
+  }
+
+  /* Trigger the width change on row hover */
+  .claim-row:hover td:first-child::before {
+    width: 2px;
+  }
+
+  /* Step indicator connector line */
+  .step-connector {
+    background: linear-gradient(to bottom, var(--color-accent), #1e2d42);
+  }
+
+  /* Panel backdrop blur */
+  .panel-backdrop {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+}
+
+/* ─── CUSTOM UTILITIES ──────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .font-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}

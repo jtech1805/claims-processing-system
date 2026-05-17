@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { createClaim, getClaim, getClaimsLedger } from "../controllers/claim.controller";
+import { createClaim, getClaim, getClaimsLedger, getClaimsMetrics } from "../controllers/claim.controller";
 
 import { validate } from "../middleware/validate";
 
@@ -20,5 +20,9 @@ router.get(
 router.get(
     "/:id",
     getClaim
+);
+router.get(
+    "/metrics/summary",
+    getClaimsMetrics
 );
 export default router;
