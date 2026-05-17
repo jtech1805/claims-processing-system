@@ -1,11 +1,19 @@
 // src/validations/claim.validation.ts
 
+import mongoose from "mongoose";
 import { z } from "zod";
 
 export const createClaimSchema = z.object({
     policyId: z
         .string()
-        .min(1, "policyId is required"),
+        .trim()
+        .refine(
+            (value) =>
+                mongoose.Types.ObjectId.isValid(value),
+            {
+                message: "Invalid policy ID"
+            }
+        ),
 
     incidentDate: z.coerce.date().refine(
         date => !isNaN(date.getTime()),

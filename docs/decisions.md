@@ -25,3 +25,13 @@ Reasoning:
 
 Tradeoff:
 - reduced normalization in favor of simpler adjudication workflow and faster implementation
+
+## Product Decision: Audit Trails for Invalid States
+
+The Scenario: Handling fundamentally invalid policies (e.g., isActive: false).
+
+Standard Approach: Throwing a 400/500 error, which leaves the claim permanently stuck in "SUBMITTED" or loses the payload entirely.
+
+Our Decision: Intercept the invalid state, mark all items as REJECTED with a clear reason, and save the final state to the database.
+
+Business Value: Creates a mathematically complete ledger and a perfect audit trail so Customer Support is never blind when a provider calls about a failed claim.

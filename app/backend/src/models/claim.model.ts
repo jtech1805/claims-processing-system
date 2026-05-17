@@ -14,7 +14,7 @@ export type LineItemStatus =
     | "PARTIAL_APPROVED"
     | "REJECTED";
 
-interface ILineItem {
+export interface ILineItem {
     serviceType: string;
 
     claimedAmount: number;
@@ -61,7 +61,7 @@ const LineItemSchema = new Schema<ILineItem>(
                 "PARTIAL_APPROVED",
                 "REJECTED"
             ],
-            required: true
+            default: 'PENDING'
         },
 
         adjudicationReason: {
