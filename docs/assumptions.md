@@ -1,4 +1,4 @@
-# Assumptions
+# Business Assumptions
 
 - Policies are preconfigured before claim submission
 - Claims become immutable after adjudication completion
@@ -14,8 +14,9 @@
 - Claims are adjudicated immediately upon submission
 - Policy coverage is determined using coverageTypes matching line-item serviceType
 - Appeals and manual review workflows are outside assignment scope
+- Multiple line items with the same serviceType are allowed within a claim because they may represent separate billable medical events or expenses.
 
-# Business & Technical Assumptions
+# Technical Assumptions
 
 Given the open-ended nature of the assignment, I made the following assumptions to constrain the scope and deliver a functional product:
 
