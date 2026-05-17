@@ -20,18 +20,15 @@ import type { NewLineItemForm } from '../../types'
 type Step = 1 | 2 | 3
 
 const SERVICE_TYPES = [
-  'Office Visit',
-  'Emergency Room',
-  'Hospitalization',
-  'Surgery',
+  "SURGERY",
+  "GENERAL_MEDICAL",
+  "DENTAL",
+  "VISION",
   'Prescription Medication',
   'Lab Work',
   'Imaging / Radiology',
   'Physical Therapy',
   'Mental Health Services',
-  'Specialist Consultation',
-  'Preventive Care',
-  'Durable Medical Equipment',
 ]
 
 function generateId() {

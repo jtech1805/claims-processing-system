@@ -4,7 +4,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "jest",
-    "seed": "ts-node src/scripts/seed.ts"
+    "seed": "ts-node src/scripts/seed.ts",
+    "dev:setup": "npm run seed && npm run dev"
   },
   "dependencies": {
     "cors": "^2.8.6",

@@ -44,7 +44,7 @@ const STATUS_META: Record<
   { Icon: React.ElementType; color: string; label: string }
 > = {
   APPROVED: { Icon: CheckCircle2, color: 'text-status-approved', label: 'Approved' },
-  PARTIAL: { Icon: Minus, color: 'text-status-partial', label: 'Partially Approved' },
+  PARTIAL_APPROVED: { Icon: Minus, color: 'text-status-partial', label: 'Partially Approved' },
   REJECTED: { Icon: XCircle, color: 'text-status-rejected', label: 'Rejected' },
 }
 
@@ -108,7 +108,7 @@ function LineItemCard({ item }: { item: LineItem }) {
           <div
             className={`h-full rounded-full transition-all ${item.status === 'APPROVED'
               ? 'bg-status-approved'
-              : item.status === 'PARTIAL'
+              : item.status === 'PARTIAL_APPROVED'
                 ? 'bg-status-partial'
                 : 'bg-status-rejected'
               }`}

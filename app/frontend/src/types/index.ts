@@ -1,6 +1,6 @@
 // ─── Domain Models ────────────────────────────────────────────────────────────
 
-export type ClaimStatus = 'APPROVED' | 'PARTIAL' | 'REJECTED';
+export type ClaimStatus = 'APPROVED' | 'PARTIAL_APPROVED' | 'REJECTED';
 
 /**
  * A single adjudicated line item within a claim (e.g. one medication or procedure).

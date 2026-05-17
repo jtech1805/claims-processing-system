@@ -65,6 +65,7 @@ app/
 POST /api/claims
 ```
 
+
 ---
 
 ### Fetch Claims Ledger
@@ -135,7 +136,10 @@ cd backend
 npm install
 npm run dev
 ```
-
+***DATA SEEDING*** 
+````bash
+ npm run seed
+ ````
 ---
 
 ## Frontend

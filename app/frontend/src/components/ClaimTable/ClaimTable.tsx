@@ -48,7 +48,7 @@ const STATUS_CONFIG: Record<
     className: 'bg-status-approved-bg text-status-approved border-status-approved/20',
     dot: 'bg-status-approved',
   },
-  PARTIAL: {
+  PARTIAL_APPROVED: {
     label: 'Partial',
     className: 'bg-status-partial-bg text-status-partial border-status-partial/20',
     dot: 'bg-status-partial',
@@ -166,7 +166,7 @@ export function ClaimTable({ onSelectClaim }: ClaimTableProps) {
 
         {/* Status filter pills */}
         <div className="flex items-center gap-1.5">
-          {(['ALL', 'APPROVED', 'PARTIAL', 'REJECTED'] as const).map((s) => (
+          {(['ALL', 'APPROVED', 'PARTIAL_APPROVED', 'REJECTED'] as const).map((s) => (
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
@@ -175,7 +175,7 @@ export function ClaimTable({ onSelectClaim }: ClaimTableProps) {
                   ? 'bg-accent/15 text-accent border border-accent/30'
                   : s === 'APPROVED'
                     ? 'bg-status-approved-bg text-status-approved border border-status-approved/20'
-                    : s === 'PARTIAL'
+                    : s === 'PARTIAL_APPROVED'
                       ? 'bg-status-partial-bg text-status-partial border border-status-partial/20'
                       : 'bg-status-rejected-bg text-status-rejected border border-status-rejected/20'
                 : 'text-slate-500 hover:text-slate-300 border border-transparent hover:border-surface-border'
