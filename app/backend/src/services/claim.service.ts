@@ -3,6 +3,7 @@ import { Claim } from "../models/claim.model";
 import { processClaim } from "./adjudication.service";
 
 import { CreateClaimInput } from "../validation/claim.validation";
+import mongoose from "mongoose";
 
 export const createClaim = async (
     payload: CreateClaimInput
@@ -64,3 +65,53 @@ export const createClaim = async (
 
     return processedClaim;
 };
+export const getProcessedClaimsLedger =
+    async () => {
+        const claims = await Claim.find({
+            status: {
+                $in: [
+                    "APPROVED",
+                    "PARTIAL_APPROVED",
+                    "REJECTED"
+                ]
+            }
+        })
+            .select([
+                "_id",
+                "policyId",
+                "incidentDate",
+                "status",
+                "totalClaimedAmount",
+                "totalApprovedAmount",
+                "updatedAt"
+            ])
+            .sort({
+                updatedAt: -1
+            });
+
+        return claims;
+    };
+
+export const getClaimById =
+    async (claimId: string) => {
+        if (
+            !mongoose.Types.ObjectId.isValid(
+                claimId
+            )
+        ) {
+            throw new Error(
+                "Invalid claim ID"
+            );
+        }
+
+        const claim =
+            await Claim.findById(claimId);
+
+        if (!claim) {
+            throw new Error(
+                "Claim not found"
+            );
+        }
+
+        return claim;
+    };

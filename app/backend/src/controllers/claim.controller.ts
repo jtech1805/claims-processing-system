@@ -16,3 +16,33 @@ export const createClaim = async (
         data: claim
     });
 };
+export const getClaimsLedger =
+    async (
+        req: Request,
+        res: Response
+    ) => {
+        const claims =
+            await claimService.getProcessedClaimsLedger();
+
+        res.status(200).json({
+            success: true,
+            count: claims.length,
+            data: claims
+        });
+    };
+
+export const getClaim =
+    async (
+        req: Request,
+        res: Response
+    ) => {
+        const claim =
+            await claimService.getClaimById(
+                req.params.id as string
+            );
+
+        res.status(200).json({
+            success: true,
+            data: claim
+        });
+    };
